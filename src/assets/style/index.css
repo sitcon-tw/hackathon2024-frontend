@@ -2,3 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+
+body {
+  @apply fullscreen;
+  @apply bg-base-100;
+}
+
+
+
+
+@layer base {
+
+  .fullscreen {
+    width: 100dvw;
+    height: 100dvh;
+  }
+
+
+
+
+}
