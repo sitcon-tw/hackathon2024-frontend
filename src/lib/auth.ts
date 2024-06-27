@@ -9,11 +9,16 @@ const api = axios.create({
 });
 
 export const login = async (token: string) => {
-    const response = await api.post('login', { user_token: token });
-    return response.status;
+  const response = await api.post('login', { user_token: token });
+  return response.status === 200;
 }
 
 export const isAuthenticatedClient = async () => {
+  try {
     const response = await api.get('is_logged');
-    return response.status == 200;
+    return response.status === 200;
+  }
+  catch (exception) {
+    throw exception;
+  }
 }

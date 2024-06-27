@@ -1,14 +1,6 @@
-import { isAuthenticatedServer } from '@/lib/auth_server';
-import { redirect } from 'next/navigation';
-
 const stamps: (string | null)[] = [];
 
 export default async function View() {
-    const isAuth = await isAuthenticatedServer();
-    if (!isAuth) {
-        return <div>Not logged</div>
-        redirect('/login');
-    }
     stamps.length = 0;
     for (let i = 0; i < 9; i++) {
         if (Math.random() > 0.5)
