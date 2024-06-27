@@ -4,7 +4,6 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import main from '@/assets/images/main.svg';
 import { login } from '@/lib/auth';
-import Skeleton from '@/components/skeleton';
 import { useRouter } from 'next/navigation';
 
 
@@ -19,8 +18,6 @@ export default function LoginPage(props: LoginPageProps) {
   const tokenInput = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const [fault, setFault] = useState(false);
-  const [bounce, setBounce] = useState('');
 
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,11 +29,9 @@ export default function LoginPage(props: LoginPageProps) {
         router.push('/');
       }
       else {
-        setFault(true);
-        setBounce('animate-bounce');
-        setTimeout(() => setBounce(''), 3000);
-        setTimeout(() => setFault(false), 3000);
-        // For the bumped effect
+        const dialog = document.querySelector('dialog');
+        if (dialog)
+          dialog.showModal();
       }
     }
   }
@@ -54,11 +49,19 @@ export default function LoginPage(props: LoginPageProps) {
         />
         <button className="btn btn-info">送出</button>
       </form>
-      { fault && 
-        <div className={`prone badge badge-error mt-5  ${bounce}`}>
-          token 錯誤！
+
+      <dialog id="my_modal_1" className="modal">
+      <div className="modal-box">
+        <h3 className="text-lg font-bold text-error">登入失敗！</h3>
+        <p className="py-4">token 錯誤或者伺服器錯誤</p>
+        <div className="modal-action">
+          <form method="dialog">
+            <button className="btn">關閉
+            </button>
+          </form>
         </div>
-      }
+      </div>
+    </dialog>
     </main>
   );
 }

@@ -1,10 +1,5 @@
 'use client'
 
-import Image from 'next/image';
-import mos1 from '@/assets/images/game/mos1.png';
-import mos2 from '@/assets/images/game/mos2.png';
-import mos3 from '@/assets/images/game/mos3.png';
-import mos4 from '@/assets/images/game/mos4.png';
 import { useState } from 'react';
 import Link from 'next/link';
 
