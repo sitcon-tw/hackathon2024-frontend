@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: process.env.NEXT_PUBLIC_API,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
@@ -9,8 +9,13 @@ const api = axios.create({
 });
 
 export const login = async (token: string) => {
-  const response = await api.post('login', { user_token: token });
-  return response.status === 200;
+  try {
+    const response = await api.post('login', { user_token: token });
+    return response.status === 200;
+  }
+  catch (exception) {
+    return undefined;
+  }
 }
 
 export const isAuthenticatedClient = async () => {
@@ -19,10 +24,15 @@ export const isAuthenticatedClient = async () => {
     return response.status === 200;
   }
   catch (exception) {
-    throw exception;
+    return undefined;
   }
 }
 
 export const postAuthenticated = async (url: string, data: any) => {
-  return await axios.post(url, data);
+  try {
+    return await axios.post(url, data);
+  }
+  catch (exception) {
+    return undefined;
+  }
 }
