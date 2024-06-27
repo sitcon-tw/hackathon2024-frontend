@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import { Scanner, IDetectedBarcode } from '@yudiel/react-qr-scanner';
 import init from '@/assets/images/init.svg';
+import PageLink from '@/components/page_link';
+import { postAuthenticated } from '@/lib/auth';
 
 
 export default function ScannerPage() {
@@ -10,17 +12,13 @@ export default function ScannerPage() {
   const handleScan = async ([result]: IDetectedBarcode[]) => {
     const raw = result.rawValue;
 
-    const request = await fetch(
-      `${process.env.NEXT_PUBLIC_API}/collect`,
-      { method: 'POST', body: JSON.stringify({ token: raw})}
-    );
-    const response = request.json();
+    const response = postAuthenticated('collect', { token: raw });
     // TODO
-
   }
 
 
   return <main className='fullscreen flex justify-center items-center flex-col p-5 gap-6 max-w-[500px] m-auto'>
+    <PageLink href="/" text="回主頁" />
     <Image src={init} alt="main" />
     <Scanner
       styles={{
