@@ -94,7 +94,7 @@ function page3() {
                     <input type="text" name="1" placeholder="第一個字" className="input input-bordered input-secondary" />
                     <input type="text" name="2" placeholder="第二個字" className="input input-bordered input-secondary" />
                     <button type="submit" className="btn btn-neutral" disabled={pending}>送出</button>
-                    <div className="prone text-xs">
+                    <div className="prose text-xs">
                         猜到了嗎?想一下你剛猜的那組英文有甚麼涵義嗎
                     </div>
                 </form>

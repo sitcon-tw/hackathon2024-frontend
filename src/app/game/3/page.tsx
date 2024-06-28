@@ -49,7 +49,7 @@ function page2() {
                     <input type="text" name="4" placeholder="第四個字" className="input input-bordered input-secondary" />
                     <input type="text" name="5" placeholder="第五個字" className="input input-bordered input-secondary" />
                     <button type="submit" className="btn btn-neutral" disabled={pending}>送出</button>
-                    <div className="prone text-xs">
+                    <div className="prose text-xs">
                         請順利從秘密之地逃出再來作答
                     </div>
                 </form>
