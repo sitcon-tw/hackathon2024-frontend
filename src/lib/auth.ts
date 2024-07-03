@@ -31,7 +31,7 @@ export const isAuthenticatedClient = async () => {
 
 export const postAuthenticated = async (url: string, data: any) => {
   try {
-    return await axios.post(url, data);
+    return await api.post(url, data);
   }
   catch (exception) {
     throw exception;

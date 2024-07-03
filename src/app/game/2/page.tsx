@@ -1,8 +1,11 @@
 'use client'
 
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import Image from 'next/image';
 import find from '@/assets/images/game/find.jpg';
+import handleSubmit from '@/lib/game_submit';
+import Link from 'next/link';
 
 function page1() {
     return (
@@ -18,28 +21,12 @@ function page1() {
         </div>
     );
 }
-function page2() {
+function page2(setHasDone: Dispatch<SetStateAction<boolean>>) {
     const [message, setMessage] = useState('');
     const [pending, setPending] = useState(false);
     const [messageColor, setMessageColor] = useState('info');
-    async function submit(formData: FormData) {
-        setPending(true);
-        setMessage('正在送出...');
-        setMessageColor('info');
-        const answer: (FormDataEntryValue | null)[] = [];
-        for (let i = 1; i <= 5; i++)
-            answer.push(formData.get(i.toString()));
-        for (const ans of answer)
-            if (ans === '') {
-                setPending(false);
-                setMessage('五格都要填寫！');
-                setMessageColor('warning');
-                return;
-            }
-        setPending(false);
-        setMessage('答案正確');
-        setMessageColor('success');
-    }
+    const [count, setCount] = useState(0);
+    const [totalCount, setTotalCount] = useState(0);
     return (
         <div>
             <article className="prose m-auto max-w-full">
@@ -47,60 +34,50 @@ function page2() {
                 <div className="border rounded border-teal-600 p-2">
                     <Image src={find} alt="題目" />
                 </div>
-                <form className="grid grid-rows-2 grid-cols-3 mt-6 gap-3" action={submit}>
+                <form className="grid grid-rows-2 grid-cols-3 mt-6 gap-3" action={handleSubmit(1, 5, setMessage, setPending, setMessageColor, setCount, setTotalCount, setHasDone)}>
                     <input type="text" name="1" placeholder="第一個字" className="input input-bordered input-secondary" />
                     <input type="text" name="2" placeholder="第二個字" className="input input-bordered input-secondary" />
                     <input type="text" name="3" placeholder="第三個字" className="input input-bordered input-secondary" />
                     <input type="text" name="4" placeholder="第四個字" className="input input-bordered input-secondary" />
                     <input type="text" name="5" placeholder="第五個字" className="input input-bordered input-secondary" />
-                    <button type="submit" className="btn btn-neutral" disabled={pending}>送出</button>
+                    <button type="submit" className="btn btn-primary" disabled={pending}>送出</button>
                 </form>
                 <div className="badge-info badge-info badge-warning badge-success hidden" />
-                {message !== '' && <div className={`badge badge-${messageColor} m-auto w-full h-10 mt-5`}>
-                    {message}
+                {message !== '' && <div className={`badge badge-${messageColor} m-auto w-full h-10 mt-5 text-center`}>
+                    {message}<br />
+                    {totalCount > 0 &&
+                        `你獲得了 ${count} / ${totalCount} 個章`
+                    }
                 </div>}
 
             </article>
         </div>
     );
 }
-function page3() {
+function page3(setHasDone: Dispatch<SetStateAction<boolean>>) {
     const [message, setMessage] = useState('');
     const [pending, setPending] = useState(false);
     const [messageColor, setMessageColor] = useState('info');
-    async function submit(formData: FormData) {
-        setPending(true);
-        setMessage('正在送出...');
-        setMessageColor('info');
-        const answer: (FormDataEntryValue | null)[] = [];
-        for (let i = 1; i <= 2; i++)
-            answer.push(formData.get(i.toString()));
-        for (const ans of answer)
-            if (ans === '') {
-                setPending(false);
-                setMessage('兩格都要填寫！');
-                setMessageColor('warning');
-                return;
-            }
-        setPending(false);
-        setMessage('答案正確');
-        setMessageColor('success');
-    }
+    const [count, setCount] = useState(0);
+    const [totalCount, setTotalCount] = useState(0);
     return (
         <div>
             <article className="prose m-auto max-w-full">
                 <h1 className="text-center">2. 大家來找茶，噢，是碴</h1>
-                <form className="grid grid-rows-2 grid-cols-3 mt-6 gap-3" action={submit}>
+                <form className="grid grid-rows-2 grid-cols-3 mt-6 gap-3" action={handleSubmit(2, 2, setMessage, setPending, setMessageColor, setCount, setTotalCount, setHasDone)}>
                     <input type="text" name="1" placeholder="第一個字" className="input input-bordered input-secondary" />
                     <input type="text" name="2" placeholder="第二個字" className="input input-bordered input-secondary" />
-                    <button type="submit" className="btn btn-neutral" disabled={pending}>送出</button>
+                    <button type="submit" className="btn btn-primary" disabled={pending}>送出</button>
                     <div className="prose text-xs">
                         猜到了嗎?想一下你剛猜的那組英文有甚麼涵義嗎
                     </div>
                 </form>
                 <div className="badge-info badge-info badge-warning badge-success hidden" />
-                {message !== '' && <div className={`badge badge-${messageColor} m-auto w-full h-10 mt-5`}>
-                    {message}
+                {message !== '' && <div className={`badge badge-${messageColor} m-auto w-full h-10 mt-5 text-center`}>
+                    {message}<br />
+                    {totalCount > 0 &&
+                        `你獲得了 ${count} / ${totalCount} 個章`
+                    }
                 </div>}
 
 
@@ -111,6 +88,8 @@ function page3() {
 
 export default function Game() {
     const [page, setPage] = useState(0);
+    const [hasDoneFirst, setHasDoneFirst] = useState(false);
+    const [hasDoneSecond, setHasDoneSecond] = useState(false);
     const PAGE_LEN = 3;
     function handleNext() {
         if (page + 1 < PAGE_LEN)
@@ -120,15 +99,31 @@ export default function Game() {
         if (page > 0)
             setPage(page - 1);
     }
+    useEffect(() => {
+        if (Number(Cookies.get('opened_problem')) >= 2)
+            setHasDoneFirst(true);
+        if (Number(Cookies.get('opened_problem')) >= 3)
+            setHasDoneSecond(true);
+    }, []);
     return (
         <div>
-            {[page1(), page2(), page3()][page]}
+            {[page1(), page2(setHasDoneFirst), page3(setHasDoneSecond)][page]}
             <div className="flex flex-row justify-between items-center mt-6">
                 <button onClick={handlePrevious} className={`btn btn-primary w-1/3 ${page > 0 ? '' : 'invisible'}`}>上一頁</button>
                 <div className="badge badge-neutral h-full">
                     第 {page + 1} 頁
                 </div>
-                <button onClick={handleNext} className={`btn btn-primary w-1/3 ${page + 1 < PAGE_LEN ? '' : 'invisible'}`}>下一頁</button>
+                { page + 2 < PAGE_LEN &&
+                    <button onClick={handleNext} className="btn btn-primary w-1/3">下一頁</button>
+                }
+                { page + 2 == PAGE_LEN && 
+                    <button onClick={handleNext} className={`btn btn-primary w-1/3 ${hasDoneFirst ? '' : 'invisible'}`}>下一頁</button>
+                }
+                { page + 1 == PAGE_LEN && 
+                    <Link href="/game" className={`btn btn-primary w-1/3 ${hasDoneSecond ? '' : 'invisible'}`}>
+                        回到關卡列表
+                    </Link>
+                }
             </div>
         </div>
     );

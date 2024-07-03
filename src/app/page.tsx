@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 
 export default function Game() {
-    const team_name = Cookies.get('team_name') as string;
+    const team_name = Cookies.get('team_name');
     const [client, setClient] = useState(false);
     useEffect(() => {
         setClient(true);

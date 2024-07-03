@@ -4,16 +4,17 @@ import Link from "next/link"
 import Cookies from 'js-cookie';
 import { useEffect, useState } from "react";
 
+const minimumOpenedProblem = [0, 1, 3];
 function ProblemLink({ id }: { id: number }) {
     const [isClient, setIsClient] = useState(false);
     useEffect(() => {
         setIsClient(true);
     }, []);
-    const opened_problem = Cookies.get('opened_problem') as string;
+    const openedProblem = Cookies.get('opened_problem');
     
     if (!isClient)
         return <></>;
-    if (Number(opened_problem) < id) {
+    if (Number(openedProblem) < minimumOpenedProblem[id - 1]) {
         return (
             <div className="btn btn-primary btn-disabled">
                 第{` ${id} `}關

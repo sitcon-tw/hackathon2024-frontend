@@ -33,17 +33,16 @@ export async function middleware(request: NextRequest) {
     if (path.startsWith('/game')) {
         const problem = (await getGameProgressServer()) as number;
 
-        let openedProblem = problem + 1;
+        let openedProblem = problem;
 
         // TODO: add time constraint
         
-
         if (path.startsWith('/game/1')) {
-            if (openedProblem < 1)
+            if (openedProblem < 0)
                 return Response.redirect(new URL('/game', request.url));
         }
         if (path.startsWith('/game/2')) {
-            if (openedProblem < 2)
+            if (openedProblem < 1)
                 return Response.redirect(new URL('/game', request.url));
         }
         if (path.startsWith('/game/3')) {

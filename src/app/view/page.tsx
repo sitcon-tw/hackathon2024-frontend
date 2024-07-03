@@ -1,32 +1,20 @@
+'use client'
 import PageLink from "@/components/page_link";
 
-const stamps: (string | null)[] = [];
-
 export default async function View() {
-    stamps.length = 0;
-    for (let i = 0; i < 9; i++) {
-        if (Math.random() > 0.5)
-            stamps.push((9 - i).toString());
-        else
-            stamps.push(null);
-    }
+    const baseURL = process.env.NEXT_PUBLIC_API;
     return (
-        <main className="flex flex-col items-center justify-center gap-3 p-5 fullscreen max-w-screen-md m-auto">
+        <main className="flex flex-col items-center gap-3 p-5 fullscreen max-w-screen-md m-auto">
             <PageLink href="/" text="回主頁" />
-            <div className="container">
+            <div>
                 <h1 className="text-center">
                     以下為你目前蒐集到的集章：
                 </h1>
             </div>
-            <div className="container">
-                <div className="grid grid-rows-3 grid-cols-3 aspect-square">
-                    { stamps.map((key, idx) => 
-                        key == null ? 
-                            <img key={idx} className="h-full w-auto" src={`/view_test/black.jpg`} />
-                            :
-                            <img key={idx} className="h-full w-auto" src={`/view_test/${key}.png`} />
-                    )}
-                </div>
+            <div className="grid grid-rows-5 grid-cols-5 aspect-square h-1/5">
+                { [...Array(25)].map((_, idx) =>
+                    <img key={idx} className="h-auto w-auto" src={`${baseURL}/stamp/${idx}`} />
+                )}
             </div>
         </main>
     );
