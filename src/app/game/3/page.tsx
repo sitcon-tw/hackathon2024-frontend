@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import Link from 'next/link';
 import handleSubmit from '@/lib/game_submit';
 
-function page1() {
+function Page1() {
     return (
         <div>
             <article className="prose m-auto max-w-full">
@@ -18,7 +18,7 @@ function page1() {
         </div>
     );
 }
-function page2(setHasDone: Dispatch<SetStateAction<boolean>>) {
+function Page2({ setHasDone }: { setHasDone: Dispatch<SetStateAction<boolean>> }) {
     const [message, setMessage] = useState('');
     const [pending, setPending] = useState(false);
     const [messageColor, setMessageColor] = useState('info');
@@ -70,7 +70,7 @@ export default function Game() {
     }, []);
     return (
         <div>
-            {[page1(), page2(setHasDone)][page]}
+            {[<Page1 key="1" />, <Page2 key="2" setHasDone={setHasDone} />][page]}
             <div className="flex flex-row justify-between items-center mt-6">
                 <button onClick={handlePrevious} className={`btn btn-primary w-1/3 ${page > 0 ? '' : 'invisible'}`}>上一頁</button>
                 <div className="badge badge-neutral h-full">
