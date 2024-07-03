@@ -1,5 +1,6 @@
 FROM node:22
 
+RUN mkdir -p /app
 ADD package.json package-lock.json /app
 WORKDIR /app
 RUN npm ci
