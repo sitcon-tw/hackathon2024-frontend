@@ -1,11 +1,28 @@
 'use client'
 
 import Link from "next/link"
+import Cookies from 'js-cookie';
+import { useEffect, useState } from "react";
 
 function ProblemLink({ id }: { id: number }) {
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+    const opened_problem = Cookies.get('opened_problem') as string;
+    
+    if (!isClient)
+        return <></>;
+    if (Number(opened_problem) < id) {
+        return (
+            <div className="btn btn-primary btn-disabled">
+                第{` ${id} `}關
+            </div>
+        )
+    }
     return (
         <Link href={`/game/${id}`} className="btn btn-primary">
-                第{` ${id} `}關
+            第{` ${id} `}關
         </Link>
     )
 }

@@ -1,9 +1,19 @@
-import { NextRequest } from "next/server";
-import { isAuthenticatedServer } from "@/lib/auth_server";
+import { NextRequest, NextResponse } from "next/server";
+import { getGameProgressServer, isAuthenticatedServer } from "@/lib/auth_server";
 
 export async function middleware(request: NextRequest) {
-    const hasLogged = await isAuthenticatedServer();
     const path = request.nextUrl.pathname;
+    let hasLogged: string | null;
+
+    if (path.startsWith('/error'))
+        return;
+
+    try {
+        hasLogged = await isAuthenticatedServer();
+    }
+    catch (exception) {
+        return Response.redirect(new URL('/error', request.url));
+    }
 
     if (hasLogged) {
         if (path.startsWith('/login')) {
@@ -18,6 +28,35 @@ export async function middleware(request: NextRequest) {
             return Response.redirect(new URL('/login', request.url));
         }
     }
+
+    const response = NextResponse.next();
+    if (path.startsWith('/game')) {
+        const problem = (await getGameProgressServer()) as number;
+
+        let openedProblem = problem + 1;
+
+        // TODO: add time constraint
+        
+
+        if (path.startsWith('/game/1')) {
+            if (openedProblem < 1)
+                return Response.redirect(new URL('/game', request.url));
+        }
+        if (path.startsWith('/game/2')) {
+            if (openedProblem < 2)
+                return Response.redirect(new URL('/game', request.url));
+        }
+        if (path.startsWith('/game/3')) {
+            if (openedProblem < 3)
+                return Response.redirect(new URL('/game', request.url));
+        }
+
+        response.cookies.set('opened_problem', openedProblem.toString());
+    }
+    if (path === '/') {
+        response.cookies.set('team_name', hasLogged as string);
+    }
+    return response;
 }
 export const config = {
     matcher: [

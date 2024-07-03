@@ -17,21 +17,29 @@ type LoginPageProps = {
 export default function LoginPage(props: LoginPageProps) {
   const tokenInput = useRef<HTMLInputElement>(null);
   const router = useRouter();
-
+  const [dialogMessage, setDialogMessage] = useState('');
 
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const value = tokenInput.current?.value;
-    console.log(value);
     if (value) {
-      if (await login(value)) {
-        console.log('redirecting');
-        router.push('/');
+      try {
+        if (await login(value)) {
+          console.log('redirecting');
+          router.push('/');
+        }
+        else {
+          setDialogMessage('token 錯誤！')
+          const dialog = document.querySelector('dialog');
+          if (dialog)
+            dialog.showModal();
+        }
       }
-      else {
-        const dialog = document.querySelector('dialog');
-        if (dialog)
-          dialog.showModal();
+      catch (exception) {
+          setDialogMessage('系統錯誤！')
+          const dialog = document.querySelector('dialog');
+          if (dialog)
+            dialog.showModal();
       }
     }
   }
@@ -53,7 +61,7 @@ export default function LoginPage(props: LoginPageProps) {
       <dialog id="my_modal_1" className="modal">
       <div className="modal-box">
         <h3 className="text-lg font-bold text-error">登入失敗！</h3>
-        <p className="py-4">token 錯誤或者伺服器錯誤</p>
+        <p className="py-4">{dialogMessage}</p>
         <div className="modal-action">
           <form method="dialog">
             <button className="btn">關閉

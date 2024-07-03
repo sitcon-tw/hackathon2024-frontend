@@ -1,8 +1,9 @@
 import axios from 'axios';
 
+axios.defaults.withCredentials = true
+
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API,
-  withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
   },
@@ -14,7 +15,7 @@ export const login = async (token: string) => {
     return response.status === 200;
   }
   catch (exception) {
-    return undefined;
+    throw exception;
   }
 }
 
@@ -24,7 +25,7 @@ export const isAuthenticatedClient = async () => {
     return response.status === 200;
   }
   catch (exception) {
-    return undefined;
+    throw exception;
   }
 }
 
@@ -33,6 +34,6 @@ export const postAuthenticated = async (url: string, data: any) => {
     return await axios.post(url, data);
   }
   catch (exception) {
-    return undefined;
+    throw exception;
   }
 }
