@@ -1,6 +1,5 @@
 'use client'
 import PageLink from "@/components/page_link";
-import Image from 'next/image';
 
 export default function View() {
     const baseURL = process.env.NEXT_PUBLIC_API;
@@ -14,7 +13,7 @@ export default function View() {
             </div>
             <div className="grid grid-rows-5 grid-cols-5 aspect-square h-1/5">
                 { [...Array(25)].map((_, idx) =>
-                    <Image key={idx} className="h-auto w-auto" src={`${baseURL}/stamp/${idx}`} alt="stamp" />
+                    <img key={idx} className="h-auto w-auto" src={`${baseURL}/stamp/${idx}`} alt="stamp" />
                 )}
             </div>
         </main>
