@@ -11,7 +11,7 @@ export default function View() {
                     以下為你目前蒐集到的集章：
                 </h1>
             </div>
-            <div className="grid grid-rows-5 grid-cols-5 aspect-square h-1/5">
+            <div className="grid grid-rows-5 grid-cols-5 aspect-square h-4/5">
                 { [...Array(25)].map((_, idx) =>
                     <img key={idx} className="h-auto w-auto" src={`${baseURL}/stamp/${idx}`} alt="stamp" />
                 )}

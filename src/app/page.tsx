@@ -1,7 +1,9 @@
 'use client'
 
 import PageLink from '@/components/page_link';
+import { logout } from '@/lib/auth';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function Game() {
@@ -10,6 +12,12 @@ export default function Game() {
     useEffect(() => {
         setClient(true);
     }, []);
+
+    const router = useRouter();
+    const handleClick = async () => {
+        await logout();
+        router.push('/login');
+    };
 
     if (client) {
         return (
@@ -21,6 +29,7 @@ export default function Game() {
                     <PageLink href="/game" text="小遊戲" />
                     <PageLink href="/scanner" text="掃描集章" />
                     <PageLink href="/view" text="檢視集章 " />
+                    <button onClick={handleClick} className="btn btn-primary">登出</button>
                 </div>
             </div>
         );

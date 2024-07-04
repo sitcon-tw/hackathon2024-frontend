@@ -18,14 +18,17 @@ export default function LoginPage(props: LoginPageProps) {
   const tokenInput = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [dialogMessage, setDialogMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const value = tokenInput.current?.value;
     if (value) {
+      setLoading(true);
       try {
         if (await login(value)) {
           console.log('redirecting');
+          setLoading(false);
           router.push('/');
         }
         else {
@@ -41,6 +44,7 @@ export default function LoginPage(props: LoginPageProps) {
           if (dialog)
             dialog.showModal();
       }
+      setLoading(false);
     }
   }
   
@@ -55,7 +59,7 @@ export default function LoginPage(props: LoginPageProps) {
           className="input input-bordered input-info w-full max-w-xs flex-1"
           ref={tokenInput}
         />
-        <button className="btn btn-info">送出</button>
+        <button className="btn btn-info" disabled={loading}>{loading ? '登入中' : '送出'}</button>
       </form>
 
       <dialog id="my_modal_1" className="modal">

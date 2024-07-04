@@ -29,6 +29,16 @@ export const isAuthenticatedClient = async () => {
   }
 }
 
+export const logout = async () => {
+  try {
+    const response = await api.get('logout');
+    return response.status === 200;
+  }
+  catch (exception) {
+    throw exception;
+  }
+}
+
 export const postAuthenticated = async (url: string, data: any) => {
   try {
     return await api.post(url, data);

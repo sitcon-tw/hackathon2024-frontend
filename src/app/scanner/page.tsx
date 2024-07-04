@@ -15,7 +15,7 @@ export default function ScannerPage() {
   const handleScan = async ([result]: IDetectedBarcode[]) => {
     const raw = result.rawValue;
 
-    setMessage('');
+    setMessage('正在驗證...');
     setMessageColor('info');
     try {
       const response = await postAuthenticated('collect', { token: raw });
