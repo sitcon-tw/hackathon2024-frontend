@@ -11,13 +11,14 @@ function ProblemLink({ id }: { id: number }) {
         setIsClient(true);
     }, []);
     const openedProblem = Cookies.get('opened_problem');
+    const isNotAfterOpenTime = Number(Cookies.get('opened_problem_by_time')) < id;
     
     if (!isClient)
         return <></>;
-    if (Number(openedProblem) < minimumOpenedProblem[id - 1]) {
+    if (Number(openedProblem) < minimumOpenedProblem[id - 1] || isNotAfterOpenTime) {
         return (
             <div className="btn btn-primary btn-disabled">
-                第{` ${id} `}關
+                第{` ${id} `}關{isNotAfterOpenTime ? '（尚未開放！）' : ''}
             </div>
         )
     }

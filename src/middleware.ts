@@ -34,23 +34,31 @@ export async function middleware(request: NextRequest) {
         const problem = (await getGameProgressServer()) as number;
 
         let openedProblem = problem;
+        let openedProblemByTime = 100;
 
-        // TODO: add time constraint
+        const currentTime = new Date();
+        if (currentTime.getTime() < Date.parse("Sat, 06 Jul 2024 10:10:00 GMT+0800"))
+            openedProblemByTime = Math.min(openedProblemByTime, 0);
+        if (currentTime.getTime() < Date.parse("Sat, 06 Jul 2024 13:40:00 GMT+0800"))
+            openedProblemByTime = Math.min(openedProblemByTime, 1);
+        if (currentTime.getTime() < Date.parse("Sat, 06 Jul 2024 15:40:00 GMT+0800"))
+            openedProblemByTime = Math.min(openedProblemByTime, 2);
         
         if (path.startsWith('/game/1')) {
-            if (openedProblem < 0)
+            if (openedProblem < 0 || openedProblemByTime < 1)
                 return Response.redirect(new URL('/game', request.url));
         }
         if (path.startsWith('/game/2')) {
-            if (openedProblem < 1)
+            if (openedProblem < 1 || openedProblemByTime < 2)
                 return Response.redirect(new URL('/game', request.url));
         }
         if (path.startsWith('/game/3')) {
-            if (openedProblem < 3)
+            if (openedProblem < 3 || openedProblemByTime < 3)
                 return Response.redirect(new URL('/game', request.url));
         }
 
         response.cookies.set('opened_problem', openedProblem.toString());
+        response.cookies.set('opened_problem_by_time', openedProblemByTime.toString());
     }
     if (path === '/') {
         response.cookies.set('team_name', hasLogged as string);
