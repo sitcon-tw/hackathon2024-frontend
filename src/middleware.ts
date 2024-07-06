@@ -61,7 +61,7 @@ export async function middleware(request: NextRequest) {
         response.cookies.set('opened_problem_by_time', openedProblemByTime.toString());
     }
     if (path === '/') {
-        response.cookies.set('team_name', hasLogged as string);
+        response.cookies.set('team_name', hasLogged as string, { maxAge: 60 * 60 * 24 * 31 });
     }
     return response;
 }
