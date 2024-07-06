@@ -17,10 +17,21 @@ export default function ScannerPage() {
   const handleScan = async ([result]: IDetectedBarcode[]) => {
     const raw = result.rawValue;
 
-    if (raw === 'jeJjYatx4sge2Nju') {
-          router.push('https://youtu.be/dQw4w9WgXcQ?si=jeJjYatx4sge2Nju');
-          return;
+
+    if (raw.startWith('yt?')) {
+      const url = raw.split('?')[1];
+      router.push(`https://www.youtube.com/watch?v${url}`);
+      return;
     }
+
+
+    if (raw.startWith('msg?')) {
+      const msg = raw.split('?')[1];
+      setMessage(msg);
+      setMessageColor('info');
+      return;
+    }
+
 
     setMessage('正在驗證...');
     setMessageColor('info');
