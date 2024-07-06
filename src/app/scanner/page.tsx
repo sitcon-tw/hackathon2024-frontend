@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Scanner, IDetectedBarcode } from '@yudiel/react-qr-scanner';
 import init from '@/assets/images/init.svg';
@@ -11,9 +12,15 @@ import { useEffect, useState } from 'react';
 export default function ScannerPage() {
   const [message, setMessage] = useState('');
   const [messageColor, setMessageColor] = useState('info');
+  const router = useRouter();
 
   const handleScan = async ([result]: IDetectedBarcode[]) => {
     const raw = result.rawValue;
+
+    if (raw === 'jeJjYatx4sge2Nju') {
+          router.push('https://youtu.be/dQw4w9WgXcQ?si=jeJjYatx4sge2Nju');
+          return;
+    }
 
     setMessage('正在驗證...');
     setMessageColor('info');
