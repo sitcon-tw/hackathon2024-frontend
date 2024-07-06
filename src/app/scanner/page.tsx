@@ -18,14 +18,14 @@ export default function ScannerPage() {
     const raw = result.rawValue;
 
 
-    if (raw.startWith('yt?')) {
+    if (raw.startsWith('yt?')) {
       const url = raw.split('?')[1];
       router.push(`https://www.youtube.com/watch?v${url}`);
       return;
     }
 
 
-    if (raw.startWith('msg?')) {
+    if (raw.startsWith('msg?')) {
       const msg = raw.split('?')[1];
       setMessage(msg);
       setMessageColor('info');
